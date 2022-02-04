@@ -6,8 +6,8 @@ const PORT = 8079;
 app.use(morgan("dev"));
 app.use(express.json());
 
-const recipeRoutes = require("./routes/recipes");
-app.use("/recipes", recipeRoutes);
+const recipesRoutes = require("./routes/RecipesRouter");
+app.use("/recipes", recipesRoutes);
 
 app.listen(PORT, () => {
   console.log(`app is listening on port ${PORT}`);

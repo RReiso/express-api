@@ -1,6 +1,7 @@
 {
   "recipes": [
     {
+      "id": "1",
       "name": "scrambledEggs",
       "ingredients": ["1 tsp oil", "2 eggs", "salt"],
       "instructions": [
@@ -12,6 +13,7 @@
       ]
     },
     {
+      "id": "2",
       "name": "garlicPasta",
       "ingredients": [
         "500mL water",
@@ -29,6 +31,7 @@
       ]
     },
     {
+      "id": "3",
       "name": "chai",
       "ingredients": [
         "400mL water",
