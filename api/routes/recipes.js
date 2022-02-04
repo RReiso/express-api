@@ -23,4 +23,16 @@ router.route("/details/:recipeName").get((req, res) => {
   res.status(200).send(responseData);
 });
 
+router.route("/").post((req, res) => {
+  const newRecipe = req.body;
+  console.log("newRecipe", newRecipe);
+  for (recipe of data.recipes) {
+    if (recipe.name === newRecipe.name) {
+      return res.status(400).send({ error: "Recipe already exists" });
+    }
+  }
+  data.recipes.push(newRecipe);
+  res.status(201).send();
+});
+
 module.exports = router;
