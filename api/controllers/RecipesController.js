@@ -1,4 +1,4 @@
-const data = require("../db/data.json");
+const RecipesModel = require("../models/RecipesModel");
 
 const create = (req, res) => {
   const { name, ingredients, instructions } = req.body;
@@ -8,31 +8,28 @@ const create = (req, res) => {
     });
   }
 
-  const recipeExists = data.recipes.find(
-    (eachRecipe) => eachRecipe.name === name
-  );
+  const recipeExists = RecipesModel.getByName(name);
   if (recipeExists) {
     return res.status(400).send({
       message: "Recipe with the given name already exists",
     });
   }
 
-  const id = Math.floor(Math.random() * 100);
-  const newRecipe = { id, name, ingredients, instructions };
-  data.recipes.push(newRecipe);
-  console.log("data.recipes", data.recipes);
-  res.status(200).send({ message: "Recipe created", recipe: newRecipe });
+  const recipeObj = { name, ingredients, instructions };
+  const createdRecipe = RecipesModel.create(recipeObj);
+  res.status(200).send({ message: "Recipe created", recipe: createdRecipe });
 };
 
 const getAll = (req, res) => {
-  const recipeNames = data.recipes.map((eachRecipe) => eachRecipe.name);
+  const recipeNames = RecipesModel.getNames();
+
   res.status(200).send({ message: "Recipe names", recipeNames });
 };
 
 const getByID = (req, res) => {
   const { id } = req.params;
 
-  const recipe = data.recipes.find((eachRecipe) => eachRecipe.id === id);
+  const recipe = RecipesModel.getByID(id);
   if (!recipe) {
     return res.status(404).send({ message: "Recipe not found" });
   }
@@ -50,30 +47,28 @@ const update = (req, res) => {
   }
 
   const { id } = req.params;
-  const recipe = data.recipes.find((eachRecipe) => eachRecipe.id === id);
+  const recipe = RecipesModel.getByID(id);
   if (!recipe) {
     return res.status(404).send({
       message: "Recipe does not exist",
     });
   }
 
-  recipe.name = name;
-  recipe.ingredients = ingredients;
-  recipe.instructions = instructions;
-  res.status(200).send({ message: "Recipe updated", recipe });
+  const payload = { name, ingredients, instructions };
+  const updatedRecipe = RecipesModel.update(id, payload);
+  res.status(200).send({ message: "Recipe updated", recipe: updatedRecipe });
 };
 
 const destroy = (req, res) => {
   const { id } = req.params;
-  const recipe = data.recipes.find((eachRecipe) => eachRecipe.id === id);
+  const recipe = RecipesModel.getByID(id);
   if (!recipe) {
     return res.status(404).send({
       message: "Recipe does not exist",
     });
   }
 
-  const newRecipes = data.recipes.filter((eachRecipe) => eachRecipe.id !== id);
-  data.recipes = newRecipes;
+  RecipesModel.destroy(id);
   res.status(204).send();
 };
 
